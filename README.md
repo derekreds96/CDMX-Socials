@@ -32,19 +32,14 @@ datos de ejemplo — el pago todavía no está conectado a ningún proveedor rea
 - **Fase 7** — conectar una librería de cámara en `/escaner` (hoy el folio se
   escribe a mano para probar).
 
-## 1. Subir el código a GitHub
+## 1. GitHub — ✅ ya está hecho
 
-1. Crea una cuenta gratis en [github.com](https://github.com) si no tienes.
-2. Crea un repositorio nuevo, vacío, sin README (por ejemplo `cdmx-socials`).
-3. Desde esta carpeta:
-   ```
-   git init
-   git add .
-   git commit -m "Esqueleto inicial de CDMX Socials"
-   git branch -M main
-   git remote add origin https://github.com/TU-USUARIO/cdmx-socials.git
-   git push -u origin main
-   ```
+El código ya está en: **https://github.com/derekreds96/CDMX-Socials**
+(repo público, rama `main`). Cada vez que quieras subir un cambio nuevo
+desde esta carpeta:
+```
+git add -A && git commit -m "mensaje" && git push
+```
 
 ## 2. Supabase — ✅ ya está hecho
 
