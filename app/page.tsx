@@ -1,7 +1,9 @@
+import Image from "next/image";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import { sampleEvents, sampleBrands, sampleTicketTypes } from "@/lib/sample-data";
 import { formatMXN, type EventRow, type Brand } from "@/lib/types";
+import { logoForBrand } from "@/lib/brand-assets";
 
 async function getEvents(): Promise<{
   events: EventRow[];
@@ -52,7 +54,7 @@ export default async function CatalogoPage() {
   return (
     <main className="max-w-3xl mx-auto px-5 py-10">
       <header className="flex items-center gap-2 mb-8">
-        <span className="w-2.5 h-2.5 rounded-full bg-accent" />
+        <Image src="/logos/cdmx-socials.jpg" alt="CDMX Socials" width={28} height={28} className="rounded" />
         <span className="h-display text-lg">CDMX Socials</span>
       </header>
 
@@ -69,6 +71,7 @@ export default async function CatalogoPage() {
             timeZone: MX_TZ,
           });
           const minPrice = minPriceByEvent[e.id];
+          const logo = logoForBrand(brand?.slug);
           return (
             <Link
               key={e.id}
@@ -76,8 +79,12 @@ export default async function CatalogoPage() {
               className="block rounded-xl border border-line bg-white overflow-hidden hover:shadow-md transition-shadow"
             >
               <div
-                className="h-20"
-                style={{ background: `linear-gradient(135deg, ${brand?.color ?? "#2A2BE0"}, #0C0C1A)` }}
+                className="h-24 relative bg-cover bg-center"
+                style={
+                  logo
+                    ? { backgroundImage: `url(${logo})` }
+                    : { background: `linear-gradient(135deg, ${brand?.color ?? "#2A2BE0"}, #0C0C1A)` }
+                }
               />
               <div className="p-4">
                 <div className="text-xs font-mono uppercase tracking-wide text-ink-faint mb-1">
