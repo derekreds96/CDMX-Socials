@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url("https://fonts.googleapis.com/css2?family=Anton&family=Pacifico&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap");
+
+body {
+  @apply bg-[#F2F3F8] text-ink font-body;
+}
+
+.h-display {
+  @apply font-display uppercase tracking-wide;
+}
