@@ -28,7 +28,7 @@ export default async function AdminPage() {
             {events.map((e) => (
               <tr key={e.id} className="border-b border-line last:border-0">
                 <td className="p-3 font-medium">{e.name}</td>
-                <td className="p-3">{new Date(e.starts_at).toLocaleDateString("es-MX")}</td>
+                <td className="p-3">{new Date(e.starts_at).toLocaleDateString("es-MX", { timeZone: "America/Mexico_City" })}</td>
                 <td className="p-3 text-ink-faint">{e.venue}</td>
               </tr>
             ))}

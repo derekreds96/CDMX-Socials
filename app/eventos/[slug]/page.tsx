@@ -27,12 +27,18 @@ export default async function EventoPage({ params }: { params: { slug: string } 
   if (!data) return notFound();
   const { event, ticketTypes, brand } = data;
 
+  const MX_TZ = "America/Mexico_City";
   const date = new Date(event.starts_at).toLocaleDateString("es-MX", {
     weekday: "long",
     day: "numeric",
     month: "long",
+    timeZone: MX_TZ,
   });
-  const time = new Date(event.starts_at).toLocaleTimeString("es-MX", { hour: "numeric", minute: "2-digit" });
+  const time = new Date(event.starts_at).toLocaleTimeString("es-MX", {
+    hour: "numeric",
+    minute: "2-digit",
+    timeZone: MX_TZ,
+  });
 
   return (
     <main className="max-w-xl mx-auto px-5 py-10">

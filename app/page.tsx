@@ -1,9 +1,13 @@
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
-import { sampleEvents, sampleBrands } from "@/lib/sample-data";
-import type { EventRow, Brand } from "@/lib/types";
+import { sampleEvents, sampleBrands, sampleTicketTypes } from "@/lib/sample-data";
+import { formatMXN, type EventRow, type Brand } from "@/lib/types";
 
-async function getEvents(): Promise<{ events: EventRow[]; brands: Record<string, Brand> }> {
+async function getEvents(): Promise<{
+  events: EventRow[];
+  brands: Record<string, Brand>;
+  minPriceByEvent: Record<string, number>;
+}> {
   try {
     const { data: events, error } = await supabase
       .from("events")
@@ -15,17 +19,35 @@ async function getEvents(): Promise<{ events: EventRow[]; brands: Record<string,
     const { data: brandRows } = await supabase.from("brands").select("*");
     const brands: Record<string, Brand> = {};
     (brandRows ?? []).forEach((b: Brand) => (brands[b.id] = b));
-    return { events, brands };
+
+    const { data: ticketTypeRows } = await supabase
+      .from("ticket_types")
+      .select("event_id, price_cents")
+      .in("event_id", events.map((e) => e.id));
+    const minPriceByEvent: Record<string, number> = {};
+    (ticketTypeRows ?? []).forEach((t: { event_id: string; price_cents: number }) => {
+      if (minPriceByEvent[t.event_id] === undefined || t.price_cents < minPriceByEvent[t.event_id]) {
+        minPriceByEvent[t.event_id] = t.price_cents;
+      }
+    });
+
+    return { events, brands, minPriceByEvent };
   } catch {
     // Supabase todavía no está conectado — mostramos datos de ejemplo.
     const brands: Record<string, Brand> = {};
     Object.values(sampleBrands).forEach((b) => (brands[b.id] = b));
-    return { events: sampleEvents, brands };
+    const minPriceByEvent: Record<string, number> = {};
+    Object.entries(sampleTicketTypes).forEach(([eventId, types]) => {
+      minPriceByEvent[eventId] = Math.min(...types.map((t) => t.price_cents));
+    });
+    return { events: sampleEvents, brands, minPriceByEvent };
   }
 }
 
+const MX_TZ = "America/Mexico_City";
+
 export default async function CatalogoPage() {
-  const { events, brands } = await getEvents();
+  const { events, brands, minPriceByEvent } = await getEvents();
 
   return (
     <main className="max-w-3xl mx-auto px-5 py-10">
@@ -44,7 +66,9 @@ export default async function CatalogoPage() {
             weekday: "short",
             day: "numeric",
             month: "short",
+            timeZone: MX_TZ,
           });
+          const minPrice = minPriceByEvent[e.id];
           return (
             <Link
               key={e.id}
@@ -63,6 +87,9 @@ export default async function CatalogoPage() {
                 <div className="text-sm text-ink-faint">
                   {date} · {e.venue}
                 </div>
+                {minPrice !== undefined && (
+                  <div className="text-sm font-mono font-semibold text-brand mt-1">Desde {formatMXN(minPrice)}</div>
+                )}
               </div>
             </Link>
           );
