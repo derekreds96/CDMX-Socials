@@ -79,7 +79,7 @@ export default async function CatalogoPage() {
               className="block rounded-xl border border-line bg-white overflow-hidden hover:shadow-md transition-shadow"
             >
               <div
-                className="h-24 relative bg-cover bg-center"
+                className="h-40 relative bg-cover bg-center"
                 style={
                   logo
                     ? { backgroundImage: `url(${logo})` }
